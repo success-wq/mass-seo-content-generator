@@ -14,11 +14,14 @@ class SEOGenerator {
         this.keywordsList = document.getElementById('keywordsList');
         this.keywordCount = document.getElementById('keywordCount');
         this.promptTypeSelect = document.getElementById('promptType');
+        this.addLocationBtn = document.getElementById('addLocationBtn');
+        this.locationsContainer = document.getElementById('locationsContainer');
         
         // Initialize data
         this.currentMatrix = [];
         this.loadedKeywords = [];
         this.promptTypes = [];
+        this.locationCount = 1;
         this.sheetsData = {
             docNames: [],
             keywordsMap: {}
@@ -41,6 +44,10 @@ class SEOGenerator {
         
         if (this.promptTypeSelect) {
             this.promptTypeSelect.addEventListener('change', () => this.handlePromptTypeChange());
+        }
+        
+        if (this.addLocationBtn) {
+            this.addLocationBtn.addEventListener('click', () => this.addLocationInput());
         }
         
         console.log('Event listeners attached');
@@ -243,6 +250,24 @@ class SEOGenerator {
         }
     }
     
+    addLocationInput() {
+        this.locationCount++;
+        
+        const locationGroup = document.createElement('div');
+        locationGroup.className = 'location-input-group';
+        locationGroup.innerHTML = `
+            <input 
+                type="text" 
+                id="cityState${this.locationCount}" 
+                placeholder="Enter city and state (e.g. Boston, MA)"
+                required
+            >
+            <button type="button" class="remove-location-btn" onclick="this.parentElement.remove()">Remove</button>
+        `;
+        
+        this.locationsContainer.appendChild(locationGroup);
+    }
+    
     async handleFormSubmit(e) {
         e.preventDefault();
         console.log('Form submitted');
@@ -270,17 +295,16 @@ class SEOGenerator {
     }
     
     async sendToWebhook(formData) {
-        const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/9e3a84b1-42e9-416b-9c73-a3cf329138d4';
+        const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/cd1e701b-9bed-4ea3-840e-d838267ab5b7';
         
         const payload = [
             {
                 "selection": formData.promptType || "",
                 "keyword": "",
-                "location": formData.cityState || "",
+                "location": formData.locations.join(', ') || "",
                 "company_name": formData.companyName || "",
                 "company_url": formData.websiteUrl || "",
-                "wp_username": formData.wpUsername || "",
-                "wp_password": formData.wpPassword || ""
+                "user": formData.userName || ""
             }
         ];
         
@@ -314,13 +338,22 @@ class SEOGenerator {
             return element ? element.value.trim() : '';
         };
         
+        // Get all location inputs
+        const locations = [];
+        const locationInputs = this.locationsContainer.querySelectorAll('input[type="text"]');
+        locationInputs.forEach(input => {
+            const value = input.value.trim();
+            if (value) {
+                locations.push(value);
+            }
+        });
+        
         return {
             promptType: this.promptTypeSelect ? this.promptTypeSelect.value.trim() : '',
-            cityState: getData('cityState'),
+            locations: locations,
             companyName: getData('companyName'),
+            userName: getData('userName'),
             websiteUrl: getData('websiteUrl'),
-            wpUsername: getData('wpUsername'),
-            wpPassword: getData('wpPassword'),
             keywords: this.loadedKeywords
         };
     }
@@ -331,8 +364,8 @@ class SEOGenerator {
             return false;
         }
         
-        if (!data.cityState) {
-            this.showStatus('Please enter city and state', 'error');
+        if (!data.locations || data.locations.length === 0) {
+            this.showStatus('Please enter at least one city and state', 'error');
             return false;
         }
         
@@ -341,18 +374,13 @@ class SEOGenerator {
             return false;
         }
         
+        if (!data.userName) {
+            this.showStatus('Please enter your name', 'error');
+            return false;
+        }
+        
         if (!data.websiteUrl) {
             this.showStatus('Please enter your website URL', 'error');
-            return false;
-        }
-        
-        if (!data.wpUsername) {
-            this.showStatus('Please enter WordPress username', 'error');
-            return false;
-        }
-        
-        if (!data.wpPassword) {
-            this.showStatus('Please enter WordPress password', 'error');
             return false;
         }
         
@@ -365,11 +393,7 @@ class SEOGenerator {
     }
     
     generateMatrix(data) {
-        const { cityState, keywords, websiteUrl } = data;
-        
-        const cityStateParts = cityState.split(',').map(part => part.trim());
-        const city = cityStateParts[0];
-        const state = cityStateParts[1] || '';
+        const { locations, keywords, websiteUrl } = data;
         
         const baseUrl = websiteUrl.replace(/\/$/, '');
         const matrix = [];
@@ -384,19 +408,25 @@ class SEOGenerator {
             pageTitle: 'Page Title'
         });
         
-        keywords.forEach(keyword => {
-            const urlSlug = this.generateUrlSlug(city, state, keyword);
-            const fullUrl = `${baseUrl}${urlSlug}`;
-            const pageTitle = this.generatePageTitle(city, state, keyword);
+        locations.forEach(location => {
+            const cityStateParts = location.split(',').map(part => part.trim());
+            const city = cityStateParts[0];
+            const state = cityStateParts[1] || '';
             
-            matrix.push({
-                type: 'data',
-                city: city,
-                state: state,
-                keyword: keyword,
-                urlSlug: urlSlug,
-                fullUrl: fullUrl,
-                pageTitle: pageTitle
+            keywords.forEach(keyword => {
+                const urlSlug = this.generateUrlSlug(city, state, keyword);
+                const fullUrl = `${baseUrl}${urlSlug}`;
+                const pageTitle = this.generatePageTitle(city, state, keyword);
+                
+                matrix.push({
+                    type: 'data',
+                    city: city,
+                    state: state,
+                    keyword: keyword,
+                    urlSlug: urlSlug,
+                    fullUrl: fullUrl,
+                    pageTitle: pageTitle
+                });
             });
         });
         
@@ -505,4 +535,3 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
-
