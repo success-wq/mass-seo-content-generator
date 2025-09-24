@@ -69,6 +69,18 @@ body.dark-mode small {
     color: #888;
 }
 
+body.dark-mode .add-location-btn,
+body.dark-mode .remove-location-btn {
+    background: #404040;
+    color: #e1e1e1;
+    border-color: #555;
+}
+
+body.dark-mode .add-location-btn:hover,
+body.dark-mode .remove-location-btn:hover {
+    background: #555;
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -175,6 +187,46 @@ small {
     margin-top: 0.25rem;
     color: #7f8c8d;
     font-size: 0.85rem;
+}
+
+/* Location input groups */
+.location-input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    align-items: center;
+}
+
+.location-input-group input {
+    flex: 1;
+}
+
+.add-location-btn,
+.remove-location-btn {
+    background: #95a5a6;
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.add-location-btn {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+}
+
+.remove-location-btn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.add-location-btn:hover,
+.remove-location-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 button {
@@ -370,5 +422,20 @@ button:disabled {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+    }
+    
+    .location-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .location-input-group input {
+        width: 100%;
+    }
+    
+    .add-location-btn,
+    .remove-location-btn {
+        width: 100%;
+        min-width: auto;
     }
 }
