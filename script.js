@@ -293,44 +293,45 @@ class SEOGenerator {
             this.showLoading(false);
         }
     }
-    
+
+     // Updated webhook to n8n payload -> made multiple locations as array
     async sendToWebhook(formData) {
-        const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/cd1e701b-9bed-4ea3-840e-d838267ab5b7';
-        
-        const payload = [
-            {
-                "selection": formData.promptType || "",
-                "keyword": "",
-                "location": formData.locations.join(', ') || "",
-                "company_name": formData.companyName || "",
-                "company_url": formData.websiteUrl || "",
-                "user": formData.userName || ""
-            }
-        ];
-        
-        console.log('Sending payload to webhook:', payload);
-        
-        try {
-            const response = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Webhook request failed: ${response.status} ${response.statusText}`);
-            }
-            
-            const result = await response.json();
-            console.log('Webhook response:', result);
-            
-        } catch (error) {
-            console.error('Webhook error:', error);
-            console.warn('Webhook failed, but continuing with matrix generation');
+    const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/cd1e701b-9bed-4ea3-840e-d838267ab5b7';
+    
+    const payload = [
+        {
+            "selection": formData.promptType || "",
+            "keyword": "",
+            "locations": formData.locations || [],
+            "company_name": formData.companyName || "",
+            "company_url": formData.websiteUrl || "",
+            "user": formData.userName || ""
         }
+    ];
+    
+    console.log('Sending payload to webhook:', payload);
+    
+    try {
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Webhook request failed: ${response.status} ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        console.log('Webhook response:', result);
+        
+    } catch (error) {
+        console.error('Webhook error:', error);
+        console.warn('Webhook failed, but continuing with matrix generation');
     }
+}
     
     getFormData() {
         const getData = (id) => {
@@ -535,3 +536,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
