@@ -1,3 +1,4 @@
+<!--v6-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,15 +42,31 @@
                     >
                     <small>Enter your company name for page generation</small>
                 </div>
+                <!-- User Input -->
+                <div class="form-group">
+                    <label for="userName">User</label>
+                    <input 
+                        type="text" 
+                        id="userName" 
+                        placeholder="Enter your name"
+                        required
+                    >
+                    <small>Enter your name for identification</small>
+                </div>
                 <!-- City and State Input -->
                 <div class="form-group">
                     <label for="cityState">City + State</label>
-                    <input 
-                        type="text" 
-                        id="cityState" 
-                        placeholder="Enter city and state (e.g. Rexburg, ID)"
-                        required
-                    >
+                    <div id="locationsContainer">
+                        <div class="location-input-group">
+                            <input 
+                                type="text" 
+                                id="cityState" 
+                                placeholder="Enter city and state (e.g. Rexburg, ID)"
+                                required
+                            >
+                            <button type="button" id="addLocationBtn" class="add-location-btn">Add More Locations</button>
+                        </div>
+                    </div>
                     <small>Enter the primary city and state for your service area</small>
                 </div>
                 <!-- Website URL Input -->
