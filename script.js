@@ -296,7 +296,7 @@ class SEOGenerator {
 
      // Updated webhook to n8n payload -> made multiple locations as array
     async sendToWebhook(formData) {
-    const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/cd1e701b-9bed-4ea3-840e-d838267ab5b7';
+    const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/36c9a1c4-31a3-440c-affa-a0c3c7b3bd81';
     
     const payload = [
         {
@@ -536,6 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
 
 
