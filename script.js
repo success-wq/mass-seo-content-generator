@@ -393,11 +393,6 @@ class SEOGenerator {
     displayWebhookResponse(response) {
         if (!this.webhookResponse) return;
         
-        if (!response) {
-            this.webhookResponse.innerHTML = '<p>Processing complete. Check n8n workflow for results.</p>';
-            return;
-        }
-        
         let html = '';
         if (typeof response === 'string') {
             html = `<p>${response}</p>`;
