@@ -393,11 +393,36 @@ class SEOGenerator {
     displayWebhookResponse(response) {
         if (!this.webhookResponse) return;
         
+        console.log('Webhook response received:', response);
+        
         let html = '';
-        if (typeof response === 'string') {
+        
+        // Check if response is empty or undefined
+        if (!response) {
+            html = '<p>No response received from webhook.</p>';
+        }
+        // Check if it's a string (the text from n8n Response Body)
+        else if (typeof response === 'string') {
             html = `<p>${response}</p>`;
-        } else {
-            html = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
+        }
+        // Check if it's an object with the response text
+        else if (typeof response === 'object') {
+            // Try to find the text response in various possible locations
+            if (response.message) {
+                html = `<p>${response.message}</p>`;
+            } else if (response.text) {
+                html = `<p>${response.text}</p>`;
+            } else if (response.body) {
+                html = `<p>${response.body}</p>`;
+            } else if (response.data) {
+                html = `<p>${response.data}</p>`;
+            } else {
+                // If none of the expected properties exist, show the full response
+                html = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
+            }
+        }
+        else {
+            html = `<p>${response}</p>`;
         }
         
         this.webhookResponse.innerHTML = html;
