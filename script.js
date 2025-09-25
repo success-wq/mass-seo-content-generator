@@ -337,11 +337,9 @@ class SEOGenerator {
         this.hideStatus();
         
         try {
-            const webhookResponse = await this.sendToWebhook(formData);
-            
-            this.displayWebhookResponse(webhookResponse);
-            this.showResults();
-            this.showStatus('Matrix generated successfully and data sent to webhook!', 'success');
+            await this.sendToWebhook(formData);
+            this.showStatus('Processing started! Please wait for results...', 'info');
+            this.startPollingForResult();
         } catch (error) {
             console.error('handleFormSubmit error:', error);
             this.showStatus('Error: ' + error.message, 'error');
@@ -367,23 +365,47 @@ class SEOGenerator {
     
     console.log('Sending payload to webhook:', payload);
     
-    const response = await fetch(webhookUrl, {
+    // Fire and forget - don't wait for response
+    fetch(webhookUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
+    }).catch(error => {
+        console.error('Webhook send error:', error);
     });
     
-    if (!response.ok) {
-        throw new Error(`Webhook request failed: ${response.status} ${response.statusText}`);
-    }
-    
-    // n8n "Respond to Webhook" node with text response
-    const result = await response.text();
-    console.log('Webhook response:', result);
-    return result;
+    console.log('Webhook sent, not waiting for response');
 }
+
+    startPollingForResult() {
+        console.log('Starting to poll for n8n result...');
+        
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzIBI3maAaiwNJRc9sdrwzg3Ul3c-prlunFN2lWDwvwzRK6nUzql1yv83M0Xw_Xfd2_/exec';
+        
+        const pollInterval = setInterval(async () => {
+            try {
+                const data = await this.fetchViaJSONP(webAppUrl + '?action=getResult');
+                console.log('Polling response:', data);
+                
+                if (data.found && data.message) {
+                    clearInterval(pollInterval);
+                    this.displayWebhookResponse(data.message);
+                    this.showResults();
+                    this.showStatus('Processing completed!', 'success');
+                }
+            } catch (error) {
+                console.error('Polling error:', error);
+            }
+        }, 30000); // Check every 15 seconds, changed to 30 secods
+        
+        // Stop polling after 30 minutes
+        setTimeout(() => {
+            clearInterval(pollInterval);
+            this.showStatus('Polling timeout - please check manually', 'error');
+        }, 30 * 60 * 1000);
+    }
     
     displayWebhookResponse(response) {
         if (!this.webhookResponse) return;
