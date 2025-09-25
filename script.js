@@ -16,12 +16,15 @@ class SEOGenerator {
         this.promptTypeSelect = document.getElementById('promptType');
         this.addLocationBtn = document.getElementById('addLocationBtn');
         this.locationsContainer = document.getElementById('locationsContainer');
+        this.locationLabel = document.querySelector('label[for="cityState"]');
+        this.locationHelpText = document.getElementById('locationHelpText');
         
         // Initialize data
         this.currentMatrix = [];
         this.loadedKeywords = [];
         this.promptTypes = [];
         this.locationCount = 1;
+        this.currentPlaceholder = "Enter city and state (e.g. Rexburg, ID)";
         this.sheetsData = {
             docNames: [],
             keywordsMap: {}
@@ -202,8 +205,63 @@ class SEOGenerator {
             .join(' ');
     }
     
+    updateLocationInputLabeling(selectedPrompt) {
+        if (!selectedPrompt) {
+            return;
+        }
+        
+        let label = "City + State";
+        let placeholder = "Enter city and state (e.g. Rexburg, ID)";
+        let helpText = "Enter the primary city and state for your service area. Items must be separated by commas (,) as shown in the example.";
+        
+        const promptLower = selectedPrompt.toLowerCase();
+        
+        if (promptLower.includes('product') && promptLower.includes('service') && promptLower.includes('city')) {
+            label = "Product + Service + City";
+            placeholder = "Enter product, service, and city (e.g. window, window replacement, houston)";
+            helpText = "Enter the product, service, and city. Items must be separated by commas (,) as shown in the example.";
+        } else if (promptLower.includes('service') && promptLower.includes('city')) {
+            label = "Service + City";
+            placeholder = "Enter service and city (e.g. window replacement, houston)";
+            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
+        } else if (promptLower.includes('product') && promptLower.includes('city')) {
+            label = "Product + City";
+            placeholder = "Enter product and city (e.g. Window, Little Rock)";
+            helpText = "Enter the product and city. Items must be separated by commas (,) as shown in the example.";
+        } else if (promptLower.includes('service areas')) {
+            // Keep default for service areas prompt or service areas prompt v2
+            label = "City + State";
+            placeholder = "Enter city and state (e.g. Rexburg, ID)";
+            helpText = "Enter the primary city and state for your service area. Items must be separated by commas (,) as shown in the example.";
+        }
+        
+        // Update the label
+        if (this.locationLabel) {
+            this.locationLabel.textContent = label;
+        }
+        
+        // Update the help text
+        if (this.locationHelpText) {
+            this.locationHelpText.textContent = helpText;
+        }
+        
+        // Update the first input placeholder
+        const firstLocationInput = document.getElementById('cityState');
+        if (firstLocationInput) {
+            firstLocationInput.placeholder = placeholder;
+        }
+        
+        // Store current placeholder for new inputs
+        this.currentPlaceholder = placeholder;
+        
+        console.log(`Updated location labeling for prompt: ${selectedPrompt}`, { label, placeholder, helpText });
+    }
+    
     handlePromptTypeChange() {
         const selectedPrompt = this.promptTypeSelect.value;
+        
+        // Update location input labeling based on selected prompt type
+        this.updateLocationInputLabeling(selectedPrompt);
         
         if (selectedPrompt) {
             if (this.sheetsData && this.sheetsData.keywordsMap[selectedPrompt]) {
@@ -259,7 +317,7 @@ class SEOGenerator {
             <input 
                 type="text" 
                 id="cityState${this.locationCount}" 
-                placeholder="Enter city and state (e.g. Boston, MA)"
+                placeholder="${this.currentPlaceholder}"
                 required
             >
             <button type="button" class="remove-location-btn" onclick="this.parentElement.remove()">Remove</button>
@@ -366,7 +424,7 @@ class SEOGenerator {
         }
         
         if (!data.locations || data.locations.length === 0) {
-            this.showStatus('Please enter at least one city and state', 'error');
+            this.showStatus('Please enter at least one location entry', 'error');
             return false;
         }
         
@@ -536,11 +594,3 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
-
-
-
-
-
-
-
-
