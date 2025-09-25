@@ -6,7 +6,7 @@ class SEOGenerator {
         // Get DOM elements
         this.form = document.getElementById('seoForm');
         this.resultsSection = document.getElementById('results');
-        this.matrixPreview = document.getElementById('matrixPreview');
+        this.webhookResponse = document.getElementById('webhookResponse');
         this.statusMessage = document.getElementById('statusMessage');
         this.submitBtn = document.getElementById('submitBtn');
         this.darkModeToggle = document.getElementById('darkModeToggle');
@@ -337,11 +337,9 @@ class SEOGenerator {
         this.hideStatus();
         
         try {
-            await this.sendToWebhook(formData);
+            const webhookResponse = await this.sendToWebhook(formData);
             
-            const matrix = this.generateMatrix(formData);
-            this.currentMatrix = matrix;
-            this.displayMatrix(matrix);
+            this.displayWebhookResponse(webhookResponse);
             this.showResults();
             this.showStatus('Matrix generated successfully and data sent to webhook!', 'success');
         } catch (error) {
@@ -384,12 +382,31 @@ class SEOGenerator {
         
         const result = await response.json();
         console.log('Webhook response:', result);
+        return result;
         
     } catch (error) {
         console.error('Webhook error:', error);
         console.warn('Webhook failed, but continuing with matrix generation');
     }
 }
+    
+    displayWebhookResponse(response) {
+        if (!this.webhookResponse) return;
+        
+        if (!response) {
+            this.webhookResponse.innerHTML = '<p>Processing complete. Check n8n workflow for results.</p>';
+            return;
+        }
+        
+        let html = '';
+        if (typeof response === 'string') {
+            html = `<p>${response}</p>`;
+        } else {
+            html = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
+        }
+        
+        this.webhookResponse.innerHTML = html;
+    }
     
     getFormData() {
         const getData = (id) => {
