@@ -367,38 +367,22 @@ class SEOGenerator {
     
     console.log('Sending payload to webhook:', payload);
     
-    try {
-        const response = await fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Webhook request failed: ${response.status} ${response.statusText}`);
-        }
-        
-        // Check if response is JSON or text based on content-type
-        const contentType = response.headers.get('content-type');
-        let result;
-        
-        if (contentType && contentType.includes('application/json')) {
-            result = await response.json();
-        } else {
-            // Handle text response from n8n "Respond to Webhook" node
-            result = await response.text();
-        }
-        
-        console.log('Webhook response:', result);
-        return result;
-        
-    } catch (error) {
-        console.error('Webhook error:', error);
-        console.warn('Webhook failed, but continuing with matrix generation');
-        throw error; // Throw the error instead of returning undefined
+    const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Webhook request failed: ${response.status} ${response.statusText}`);
     }
+    
+    // n8n "Respond to Webhook" node with text response
+    const result = await response.text();
+    console.log('Webhook response:', result);
+    return result;
 }
     
     displayWebhookResponse(response) {
