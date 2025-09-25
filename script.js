@@ -77,7 +77,7 @@ class SEOGenerator {
     async loadInitialSheetsData() {
         console.log('loadInitialSheetsData() called');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzIBI3maAaiwNJRc9sdrwzg3Ul3c-prlunFN2lWDwvwzRK6nUzql1yv83M0Xw_Xfd2_/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzVKs9WI35ZAJ7e09hcaLU2l3gN3kyjjIyu4K1sBmPung7mfXSCUduGfVk8srdi7MdH/exec';
         
         try {
             console.log('Calling fetchFromWebApp with URL:', webAppUrl);
@@ -382,7 +382,7 @@ class SEOGenerator {
     startPollingForResult() {
         console.log('Starting to poll for n8n result...');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzIBI3maAaiwNJRc9sdrwzg3Ul3c-prlunFN2lWDwvwzRK6nUzql1yv83M0Xw_Xfd2_/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzVKs9WI35ZAJ7e09hcaLU2l3gN3kyjjIyu4K1sBmPung7mfXSCUduGfVk8srdi7MdH/exec';
         
         const pollInterval = setInterval(async () => {
             try {
@@ -628,3 +628,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
