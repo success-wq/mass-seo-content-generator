@@ -380,13 +380,24 @@ class SEOGenerator {
             throw new Error(`Webhook request failed: ${response.status} ${response.statusText}`);
         }
         
-        const result = await response.json();
+        // Check if response is JSON or text based on content-type
+        const contentType = response.headers.get('content-type');
+        let result;
+        
+        if (contentType && contentType.includes('application/json')) {
+            result = await response.json();
+        } else {
+            // Handle text response from n8n "Respond to Webhook" node
+            result = await response.text();
+        }
+        
         console.log('Webhook response:', result);
         return result;
         
     } catch (error) {
         console.error('Webhook error:', error);
         console.warn('Webhook failed, but continuing with matrix generation');
+        throw error; // Throw the error instead of returning undefined
     }
 }
     
@@ -397,32 +408,12 @@ class SEOGenerator {
         
         let html = '';
         
-        // Check if response is empty or undefined
         if (!response) {
             html = '<p>No response received from webhook.</p>';
-        }
-        // Check if it's a string (the text from n8n Response Body)
-        else if (typeof response === 'string') {
+        } else if (typeof response === 'string') {
             html = `<p>${response}</p>`;
-        }
-        // Check if it's an object with the response text
-        else if (typeof response === 'object') {
-            // Try to find the text response in various possible locations
-            if (response.message) {
-                html = `<p>${response.message}</p>`;
-            } else if (response.text) {
-                html = `<p>${response.text}</p>`;
-            } else if (response.body) {
-                html = `<p>${response.body}</p>`;
-            } else if (response.data) {
-                html = `<p>${response.data}</p>`;
-            } else {
-                // If none of the expected properties exist, show the full response
-                html = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
-            }
-        }
-        else {
-            html = `<p>${response}</p>`;
+        } else {
+            html = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
         }
         
         this.webhookResponse.innerHTML = html;
