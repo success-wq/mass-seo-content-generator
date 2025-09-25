@@ -77,7 +77,7 @@ class SEOGenerator {
     async loadInitialSheetsData() {
         console.log('loadInitialSheetsData() called');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzVKs9WI35ZAJ7e09hcaLU2l3gN3kyjjIyu4K1sBmPung7mfXSCUduGfVk8srdi7MdH/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzIBI3maAaiwNJRc9sdrwzg3Ul3c-prlunFN2lWDwvwzRK6nUzql1yv83M0Xw_Xfd2_/exec';
         
         try {
             console.log('Calling fetchFromWebApp with URL:', webAppUrl);
@@ -382,23 +382,27 @@ class SEOGenerator {
     startPollingForResult() {
         console.log('Starting to poll for n8n result...');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzVKs9WI35ZAJ7e09hcaLU2l3gN3kyjjIyu4K1sBmPung7mfXSCUduGfVk8srdi7MdH/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzIBI3maAaiwNJRc9sdrwzg3Ul3c-prlunFN2lWDwvwzRK6nUzql1yv83M0Xw_Xfd2_/exec';
         
         const pollInterval = setInterval(async () => {
             try {
+                console.log('Polling Google Apps Script...');
                 const data = await this.fetchViaJSONP(webAppUrl + '?action=getResult');
-                console.log('Polling response:', data);
+                console.log('Polling response received:', data);
                 
                 if (data.found && data.message) {
+                    console.log('Found result! Displaying:', data.message);
                     clearInterval(pollInterval);
                     this.displayWebhookResponse(data.message);
                     this.showResults();
                     this.showStatus('Processing completed!', 'success');
+                } else {
+                    console.log('No result found yet, continuing to poll...');
                 }
             } catch (error) {
                 console.error('Polling error:', error);
             }
-        }, 30000); // Check every 15 seconds, changed to 30 secods
+        }, 30000); // Check every 30 seconds
         
         // Stop polling after 30 minutes
         setTimeout(() => {
@@ -628,4 +632,3 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
-
