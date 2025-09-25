@@ -358,7 +358,7 @@ class SEOGenerator {
             "keyword": "",
             "locations": formData.locations || [],
             "company_name": formData.companyName || "",
-            "company_url": formData.websiteUrl || "",
+            //"company_url": formData.websiteUrl || "",
             "user": formData.userName || ""
         }
     ];
@@ -453,7 +453,7 @@ class SEOGenerator {
             locations: locations,
             companyName: getData('companyName'),
             userName: getData('userName'),
-            websiteUrl: getData('websiteUrl'),
+            //websiteUrl: getData('websiteUrl'),
             keywords: this.loadedKeywords
         };
     }
@@ -478,12 +478,12 @@ class SEOGenerator {
             this.showStatus('Please enter your name', 'error');
             return false;
         }
-        
+        /**
         if (!data.websiteUrl) {
             this.showStatus('Please enter your website URL', 'error');
             return false;
         }
-        
+        **/
         if (!data.keywords || data.keywords.length === 0) {
             this.showStatus('No keywords loaded. Please select a prompt type first.', 'error');
             return false;
@@ -493,9 +493,9 @@ class SEOGenerator {
     }
     
     generateMatrix(data) {
-        const { locations, keywords, websiteUrl } = data;
+        const { locations, keywords/**, websiteUrl**/ } = data;
         
-        const baseUrl = websiteUrl.replace(/\/$/, '');
+        //const baseUrl = websiteUrl.replace(/\/$/, '');
         const matrix = [];
         
         matrix.push({
@@ -635,3 +635,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
