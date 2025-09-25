@@ -77,7 +77,7 @@ class SEOGenerator {
     async loadInitialSheetsData() {
         console.log('loadInitialSheetsData() called');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzIBI3maAaiwNJRc9sdrwzg3Ul3c-prlunFN2lWDwvwzRK6nUzql1yv83M0Xw_Xfd2_/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbwa9QlKIg_jvALCVujunddTOpz7EWnYTuJl28eRo3OR7VjFYt1q7fFRBIYFK66jDudk/exec';
         
         try {
             console.log('Calling fetchFromWebApp with URL:', webAppUrl);
@@ -382,13 +382,14 @@ class SEOGenerator {
     startPollingForResult() {
         console.log('Starting to poll for n8n result...');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzIBI3maAaiwNJRc9sdrwzg3Ul3c-prlunFN2lWDwvwzRK6nUzql1yv83M0Xw_Xfd2_/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbwa9QlKIg_jvALCVujunddTOpz7EWnYTuJl28eRo3OR7VjFYt1q7fFRBIYFK66jDudk/exec';
         
         const pollInterval = setInterval(async () => {
             try {
                 console.log('Polling Google Apps Script...');
                 // Fix: Create proper URL with action parameter
                 const pollUrl = webAppUrl + '?action=getResult';
+                console.log('Polling URL:', pollUrl);
                 const data = await this.fetchViaJSONP(pollUrl);
                 console.log('Polling response received:', data);
                 
