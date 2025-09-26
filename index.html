@@ -81,10 +81,16 @@
                     <small>Keywords are loaded via webhook</small>
                 </div>
                 <!-- Submit Button -->
-                <button type="submit" id="submitBtn">
-                    <span class="btn-text">Generate Matrix</span>
-                    <span class="loader" style="display: none;"></span>
-                </button>
+                <!-- Submit and Clear Buttons -->
+                <div class="button-group">
+                    <button type="submit" id="submitBtn">
+                        <span class="btn-text">Generate Matrix</span>
+                        <span class="loader" style="display: none;"></span>
+                    </button>
+                    <button type="button" id="clearBtn" class="clear-btn" disabled>
+                        Clear All
+                    </button>
+                </div>
             </form>
         </div>
         <!-- Results Section -->
@@ -98,4 +104,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
