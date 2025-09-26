@@ -9,6 +9,7 @@ class SEOGenerator {
         this.webhookResponse = document.getElementById('webhookResponse');
         this.statusMessage = document.getElementById('statusMessage');
         this.submitBtn = document.getElementById('submitBtn');
+        this.clearBtn = document.getElementById('clearBtn');
         this.darkModeToggle = document.getElementById('darkModeToggle');
         this.keywordsDisplay = document.getElementById('keywordsDisplay');
         this.keywordsList = document.getElementById('keywordsList');
@@ -51,6 +52,10 @@ class SEOGenerator {
         
         if (this.addLocationBtn) {
             this.addLocationBtn.addEventListener('click', () => this.addLocationInput());
+        }
+        
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => this.handleClearAll());
         }
         
         console.log('Event listeners attached');
@@ -599,6 +604,71 @@ class SEOGenerator {
             this.resultsSection.style.display = 'block';
             this.resultsSection.scrollIntoView({ behavior: 'smooth' });
         }
+        
+        // Enable clear button when results are shown
+        if (this.clearBtn) {
+            this.clearBtn.disabled = false;
+        }
+    }
+    
+    handleClearAll() {
+        console.log('Clear All button clicked');
+        
+        // Clear form inputs
+        if (this.form) {
+            this.form.reset();
+        }
+        
+        // Reset prompt type dropdown
+        if (this.promptTypeSelect) {
+            this.promptTypeSelect.selectedIndex = 0;
+        }
+        
+        // Clear additional location inputs (keep only the first one)
+        const locationInputs = this.locationsContainer.querySelectorAll('.location-input-group');
+        for (let i = 1; i < locationInputs.length; i++) {
+            locationInputs[i].remove();
+        }
+        this.locationCount = 1;
+        
+        // Reset location labeling to default
+        this.updateLocationInputLabeling('');
+        
+        // Clear and hide keywords display
+        this.loadedKeywords = [];
+        if (this.keywordsDisplay) {
+            this.keywordsDisplay.style.display = 'none';
+        }
+        if (this.keywordsList) {
+            this.keywordsList.innerHTML = '';
+        }
+        if (this.keywordCount) {
+            this.keywordCount.textContent = '';
+        }
+        
+        // Clear and hide results
+        if (this.resultsSection) {
+            this.resultsSection.style.display = 'none';
+        }
+        if (this.webhookResponse) {
+            this.webhookResponse.innerHTML = '';
+        }
+        
+        // Reset current matrix
+        this.currentMatrix = [];
+        
+        // Disable clear button again
+        if (this.clearBtn) {
+            this.clearBtn.disabled = true;
+        }
+        
+        // Hide status message
+        this.hideStatus();
+        
+        // Show success message
+        this.showStatus('All selections and results have been cleared', 'success');
+        
+        console.log('Clear All completed');
     }
     
     showLoading(show) {
@@ -649,5 +719,3 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
-
-
