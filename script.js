@@ -77,7 +77,7 @@ class SEOGenerator {
     async loadInitialSheetsData() {
         console.log('loadInitialSheetsData() called');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbwa9QlKIg_jvALCVujunddTOpz7EWnYTuJl28eRo3OR7VjFYt1q7fFRBIYFK66jDudk/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbyQ4CxvurAfyPTwxXU7sRICxfEmrpmoZMfRbUA4hD1uzuYpWDDghAS05CtQvRr0C-JY/exec';
         
         try {
             console.log('Calling fetchFromWebApp with URL:', webAppUrl);
@@ -220,10 +220,24 @@ class SEOGenerator {
             label = "Product + Service + City";
             placeholder = "Enter product, service, and city (e.g. window, window replacement, houston)";
             helpText = "Enter the product, service, and city. Items must be separated by commas (,) as shown in the example.";
-        } else if (promptLower.includes('service') && promptLower.includes('city')) {
+        //SERVICE + CITY PROMPT
+        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('window') && promptLower.includes('replacement')) { //window replacement prompt
             label = "Service + City";
-            placeholder = "Enter service and city (e.g. window replacement, houston)";
+            placeholder = "Enter service and city (e.g. window replacement, Houston)";
             helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
+        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('window') && promptLower.includes('installation')) { //window installation prompt
+            label = "Service + City";
+            placeholder = "Enter service and city (e.g. window installation, Houston)";
+            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
+        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('door') && promptLower.includes('replacement')) { //door replacement prompt
+            label = "Service + City";
+            placeholder = "Enter service and city (e.g. door replacment, Chubbuck)";
+            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
+        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('door') && promptLower.includes('installation')) { //door installation prompt
+            label = "Service + City";
+            placeholder = "Enter service and city (e.g. door installation, Chubbuck)";
+            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
+        // S+C UP TO HERE
         } else if (promptLower.includes('product') && promptLower.includes('city')) {
             label = "Product + City";
             placeholder = "Enter product and city (e.g. Window, Little Rock)";
@@ -382,7 +396,7 @@ class SEOGenerator {
     startPollingForResult() {
         console.log('Starting to poll for n8n result...');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbwa9QlKIg_jvALCVujunddTOpz7EWnYTuJl28eRo3OR7VjFYt1q7fFRBIYFK66jDudk/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbyQ4CxvurAfyPTwxXU7sRICxfEmrpmoZMfRbUA4hD1uzuYpWDDghAS05CtQvRr0C-JY/exec';
         
         const pollInterval = setInterval(async () => {
             try {
@@ -635,4 +649,5 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
