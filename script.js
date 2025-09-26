@@ -26,6 +26,7 @@ class SEOGenerator {
         this.promptTypes = [];
         this.locationCount = 1;
         this.currentPlaceholder = "Enter city and state (e.g. Rexburg, ID)";
+        this.pollInterval = null; // Store polling interval reference
         this.sheetsData = {
             docNames: [],
             keywordsMap: {}
@@ -403,7 +404,8 @@ class SEOGenerator {
         
         const webAppUrl = 'https://script.google.com/macros/s/AKfycbyQ4CxvurAfyPTwxXU7sRICxfEmrpmoZMfRbUA4hD1uzuYpWDDghAS05CtQvRr0C-JY/exec';
         
-        const pollInterval = setInterval(async () => {
+        // Store the interval reference so it can be stopped from other methods
+        this.pollInterval = setInterval(async () => {
             try {
                 console.log('Polling Google Apps Script...');
                 // Fix: Create proper URL with action parameter
@@ -414,7 +416,7 @@ class SEOGenerator {
                 
                 if (data.found && data.message) {
                     console.log('Found result! Displaying:', data.message);
-                    clearInterval(pollInterval);
+                    this.stopPolling(); // Use the new stop method
                     this.displayWebhookResponse(data.message);
                     this.showResults();
                     this.showStatus('Processing completed!', 'success');
@@ -428,9 +430,19 @@ class SEOGenerator {
         
         // Stop polling after 30 minutes
         setTimeout(() => {
-            clearInterval(pollInterval);
-            this.showStatus('Polling timeout - please check manually', 'error');
+            if (this.pollInterval) {
+                this.stopPolling();
+                this.showStatus('Polling timeout - please check manually', 'error');
+            }
         }, 30 * 60 * 1000);
+    }
+    
+    stopPolling() {
+        if (this.pollInterval) {
+            console.log('Stopping polling...');
+            clearInterval(this.pollInterval);
+            this.pollInterval = null;
+        }
     }
     
     displayWebhookResponse(response) {
@@ -613,6 +625,9 @@ class SEOGenerator {
     
     handleClearAll() {
         console.log('Clear All button clicked');
+        
+        // Stop any active polling
+        this.stopPolling();
         
         // Clear form inputs
         if (this.form) {
