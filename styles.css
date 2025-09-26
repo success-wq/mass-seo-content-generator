@@ -214,6 +214,53 @@ button:disabled {
     margin-bottom: 0.5rem;
 }
 
+/* Location Input Groups */
+.location-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.location-input-group input {
+    flex: 1;
+}
+
+.add-location-btn,
+.remove-location-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: auto;
+    transform: none;
+    box-shadow: none;
+}
+
+.add-location-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.add-location-btn:hover {
+    background-color: #218838;
+    transform: none;
+    box-shadow: none;
+}
+
+.remove-location-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.remove-location-btn:hover {
+    background-color: #c82333;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Button Group Styling */
 .button-group {
     display: flex;
