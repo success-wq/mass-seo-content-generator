@@ -222,38 +222,7 @@ class SEOGenerator {
         
         const promptLower = selectedPrompt.toLowerCase();
         
-        if (promptLower.includes('product') && promptLower.includes('service') && promptLower.includes('city')) {
-            label = "Product + Service + City";
-            placeholder = "Enter product, service, and city (e.g. window, window replacement, houston)";
-            helpText = "Enter the product, service, and city. Items must be separated by commas (,) as shown in the example.";
-        //SERVICE + CITY PROMPT
-        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('window') && promptLower.includes('replacement')) { //window replacement prompt
-            label = "Service + City";
-            placeholder = "Enter service and city (e.g. window replacement, Houston)";
-            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
-        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('window') && promptLower.includes('installation')) { //window installation prompt
-            label = "Service + City";
-            placeholder = "Enter service and city (e.g. window installation, Houston)";
-            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
-        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('door') && promptLower.includes('replacement')) { //door replacement prompt
-            label = "Service + City";
-            placeholder = "Enter service and city (e.g. door replacment, Chubbuck)";
-            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
-        } else if (promptLower.includes('service') && promptLower.includes('city') && promptLower.includes('door') && promptLower.includes('installation')) { //door installation prompt
-            label = "Service + City";
-            placeholder = "Enter service and city (e.g. door installation, Chubbuck)";
-            helpText = "Enter the service and city. Items must be separated by commas (,) as shown in the example.";
-        // S+C UP TO HERE
-        } else if (promptLower.includes('product') && promptLower.includes('city')) {
-            label = "Product + City";
-            placeholder = "Enter product and city (e.g. Window, Little Rock)";
-            helpText = "Enter the product and city. Items must be separated by commas (,) as shown in the example.";
-        } else if (promptLower.includes('service areas')) {
-            // Keep default for service areas prompt or service areas prompt v2
-            label = "City + State";
-            placeholder = "Enter city and state (e.g. Rexburg, ID)";
-            helpText = "Enter the primary city and state for your service area. Items must be separated by commas (,) as shown in the example.";
-        }
+
         
         // Update the label
         if (this.locationLabel) {
@@ -734,5 +703,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
 
