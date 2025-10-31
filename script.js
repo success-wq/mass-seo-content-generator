@@ -83,7 +83,7 @@ class SEOGenerator {
     async loadInitialSheetsData() {
         console.log('loadInitialSheetsData() called');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbyQ4CxvurAfyPTwxXU7sRICxfEmrpmoZMfRbUA4hD1uzuYpWDDghAS05CtQvRr0C-JY/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbw7IRUiWtoA9oevDmxb-_4-9Jxgjnf22XB9fxkhfSORj_C40AxVog1OpizQ8qVAxfcT/exec';
         
         try {
             console.log('Calling fetchFromWebApp with URL:', webAppUrl);
@@ -734,3 +734,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
