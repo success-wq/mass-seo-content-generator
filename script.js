@@ -402,7 +402,7 @@ class SEOGenerator {
     startPollingForResult() {
         console.log('Starting to poll for n8n result...');
         
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbyQ4CxvurAfyPTwxXU7sRICxfEmrpmoZMfRbUA4hD1uzuYpWDDghAS05CtQvRr0C-JY/exec';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbw7IRUiWtoA9oevDmxb-_4-9Jxgjnf22XB9fxkhfSORj_C40AxVog1OpizQ8qVAxfcT/exec';
         
         // Store the interval reference so it can be stopped from other methods
         this.pollInterval = setInterval(async () => {
@@ -734,4 +734,5 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
