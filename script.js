@@ -344,7 +344,7 @@ class SEOGenerator {
     const payload = [
         {
             "selection": formData.promptType || "",
-            "keyword": "",
+            "keywords": formData.keywords || [],  // ✅ Send the keywords array
             "locations": formData.locations || [],
             "company_name": formData.companyName || "",
             //"company_url": formData.websiteUrl || "",
@@ -703,6 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
 
 
