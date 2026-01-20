@@ -95,25 +95,33 @@ class SEOGenerator {
         }
     }
     
-    async fetchFromWebApp(webAppUrl) {
-        console.log('fetchFromWebApp() called');
+async fetchFromWebApp(webAppUrl) {
+    console.log('fetchFromWebApp() called');
+    
+    try {
+        console.log('Fetching from:', webAppUrl);
         
-        try {
-            const data = await this.fetchViaJSONP(webAppUrl);
-            console.log('JSONP data received:', data);
-            
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            
-            this.mapWebAppDataToUI(data);
-            this.showStatus('Successfully loaded data from Google Apps Script!', 'success');
-            
-        } catch (error) {
-            console.error('fetchFromWebApp error:', error);
-            throw error;
+        const response = await fetch(webAppUrl);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
+        const data = await response.json();
+        console.log('Data received:', data);
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        this.mapWebAppDataToUI(data);
+        this.showStatus('Successfully loaded data from Google Apps Script!', 'success');
+        
+    } catch (error) {
+        console.error('fetchFromWebApp error:', error);
+        throw error;
     }
+}
     
     fetchViaJSONP(url) {
         return new Promise((resolve, reject) => {
@@ -368,43 +376,43 @@ class SEOGenerator {
     console.log('Webhook sent, not waiting for response');
 }
 
-    startPollingForResult() {
-        console.log('Starting to poll for n8n result...');
-        
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbw7IRUiWtoA9oevDmxb-_4-9Jxgjnf22XB9fxkhfSORj_C40AxVog1OpizQ8qVAxfcT/exec';
-        
-        // Store the interval reference so it can be stopped from other methods
-        this.pollInterval = setInterval(async () => {
-            try {
-                console.log('Polling Google Apps Script...');
-                // Fix: Create proper URL with action parameter
-                const pollUrl = webAppUrl + '?action=getResult';
-                console.log('Polling URL:', pollUrl);
-                const data = await this.fetchViaJSONP(pollUrl);
-                console.log('Polling response received:', data);
-                
-                if (data.found && data.message) {
-                    console.log('Found result! Displaying:', data.message);
-                    this.stopPolling(); // Use the new stop method
-                    this.displayWebhookResponse(data.message);
-                    this.showResults();
-                    this.showStatus('Processing completed!', 'success');
-                } else {
-                    console.log('No result found yet, continuing to poll...');
-                }
-            } catch (error) {
-                console.error('Polling error:', error);
-            }
-        }, 30000); // Check every 30 seconds
-        
-        // Stop polling after 30 minutes
-        setTimeout(() => {
-            if (this.pollInterval) {
+startPollingForResult() {
+    console.log('Starting to poll for n8n result...');
+    
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbw7IRUiWtoA9oevDmxb-_4-9Jxgjnf22XB9fxkhfSORj_C40AxVog1OpizQ8qVAxfcT/exec';
+    
+    this.pollInterval = setInterval(async () => {
+        try {
+            console.log('Polling Google Apps Script...');
+            const pollUrl = webAppUrl + '?action=getResult';
+            console.log('Polling URL:', pollUrl);
+            
+            const response = await fetch(pollUrl);
+            const data = await response.json();
+            console.log('Polling response received:', data);
+            
+            if (data.found && data.message) {
+                console.log('Found result! Displaying:', data.message);
                 this.stopPolling();
-                this.showStatus('Polling timeout - please check manually', 'error');
+                this.displayWebhookResponse(data.message);
+                this.showResults();
+                this.showStatus('Processing completed!', 'success');
+            } else {
+                console.log('No result found yet, continuing to poll...');
             }
-        }, 30 * 60 * 1000);
-    }
+        } catch (error) {
+            console.error('Polling error:', error);
+        }
+    }, 30000); // Check every 30 seconds
+    
+    // Stop polling after 30 minutes
+    setTimeout(() => {
+        if (this.pollInterval) {
+            this.stopPolling();
+            this.showStatus('Polling timeout - please check manually', 'error');
+        }
+    }, 30 * 60 * 1000);
+}
     
     stopPolling() {
         if (this.pollInterval) {
@@ -703,6 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
 
 
