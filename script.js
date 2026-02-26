@@ -379,7 +379,7 @@ async fetchFromWebApp(webAppUrl) {
 startPollingForResult() {
     console.log('Starting to poll for n8n result...');
     
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbyPi9IpABbSYAJidnqM50xTpX66owAY7p-JYaZAMLbiYkTx4Wa5X4fuopEBpO-XLRaw/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbwI9qsodDtmvZ8dndEmK0xTgCNUcbrXcNliG3pfnYWKKHme-ZXShmZIVj824gsxg6Vd/exec';
     
     this.pollInterval = setInterval(async () => {
         try {
@@ -387,8 +387,7 @@ startPollingForResult() {
             const pollUrl = webAppUrl + '?action=getResult';
             console.log('Polling URL:', pollUrl);
             
-            const response = await fetch(pollUrl);
-            const data = await response.json();
+            const data = await this.fetchViaJSONP(pollUrl);
             console.log('Polling response received:', data);
             
             if (data.found && data.message) {
@@ -403,7 +402,16 @@ startPollingForResult() {
         } catch (error) {
             console.error('Polling error:', error);
         }
-    }, 30000); // Check every 30 seconds
+    }, 30000);
+    
+    // Stop polling after 30 minutes
+    setTimeout(() => {
+        if (this.pollInterval) {
+            this.stopPolling();
+            this.showStatus('Polling timeout - please check manually', 'error');
+        }
+    }, 30 * 60 * 1000);
+}
     
     // Stop polling after 30 minutes
     setTimeout(() => {
@@ -711,6 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
 
 
