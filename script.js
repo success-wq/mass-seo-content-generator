@@ -413,15 +413,6 @@ startPollingForResult() {
     }, 30 * 60 * 1000);
 }
     
-    // Stop polling after 30 minutes
-    setTimeout(() => {
-        if (this.pollInterval) {
-            this.stopPolling();
-            this.showStatus('Polling timeout - please check manually', 'error');
-        }
-    }, 30 * 60 * 1000);
-}
-    
     stopPolling() {
         if (this.pollInterval) {
             console.log('Stopping polling...');
@@ -719,6 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error stack:', error.stack);
     }
 });
+
 
 
 
