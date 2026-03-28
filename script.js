@@ -347,7 +347,7 @@ async fetchFromWebApp(webAppUrl) {
 
      // Updated webhook to n8n payload -> made multiple locations as array
     async sendToWebhook(formData) {
-    const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/36c9a1c4-31a3-440c-affa-a0c3c7b3bd81';
+    const webhookUrl = 'https://bsmteam.app.n8n.cloud/webhook/fa2653da-42af-48e1-aa3d-b773ef813419';
     
     const payload = [
         {
